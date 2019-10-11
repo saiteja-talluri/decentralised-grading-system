@@ -1,0 +1,33 @@
+{
+  "name": "decentralised-grading-system",
+  "version": "1.0.0",
+  "description": "Etherium DApp for Decentralised Grading System",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/saiteja-talluri/decentralised-grading-system.git"
+  },
+  "keywords": [],
+  "author": "saiteja-talluri",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/saiteja-talluri/decentralised-grading-system/issues"
+  },
+  "homepage": "https://github.com/saiteja-talluri/decentralised-grading-system#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^7.1.5",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^3.2.0",
+    "json-loader": "^0.5.7",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2",
+    "style-loader": "^1.0.0",
+    "web3": "^0.20.7",
+    "webpack": "^4.41.1"
+  }
+}
