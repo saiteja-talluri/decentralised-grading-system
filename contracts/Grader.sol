@@ -1,4 +1,4 @@
-pragma solidity ^0.4.20;
+pragma solidity ^0.4.26;
 
 contract Grader {
     address public admin;
@@ -8,7 +8,7 @@ contract Grader {
     mapping(address => bool) public instructors;
     mapping(bytes32 => address) public courseInstructor;
 
-    function Grader() public {
+    constructor() public {
         admin = msg.sender;
         message = 'Welcome to the Decentralised Grading System designed by Saiteja Talluri and Pavan Bhargav !!';
     }
@@ -68,29 +68,39 @@ contract Grader {
             return false;
     }
 
-    function addExam(bytes32 courseID, bytes32 examID, uint256 maxMarks, mapping (bytes32 => uint256) marks) public returns (bool added) {
+    function addExam(bytes32 courseID, bytes32 examID, uint256 maxMarks, bytes32[] rollList, uint256[] marksList) public returns (bool added) {
         if (courseIds[courseID] && (instructors[msg.sender] || courses[courseID].TAs[msg.sender])) {
+            if (marksList.length != rollList.length)
+                return false;
             courses[courseID].examIds[examID] = true;
             courses[courseID].examIDList.push(examID);
-            courses[courseID].exams[examID] = Exam(examID, maxMarks, marks);
+            courses[courseID].exams[examID] = Exam(examID, maxMarks);
+            for (uint256 i = 0; i < rollList.length; i++)
+                courses[courseID].exams[examID].marks[rollList[i]] = marksList[i];
             return true;
         }
         else
             return false;
     }
 
-    function updateMarks(bytes32 courseID, bytes32 examID, mapping (bytes32 => uint256) marks) public returns (bool added) {
+    function updateMarks(bytes32 courseID, bytes32 examID, bytes32[] rollList, uint256[] marksList) public returns (bool added) {
         if (courseIds[courseID] && (instructors[msg.sender] || courses[courseID].TAs[msg.sender]) && courses[courseID].examIds[examID]) {
-            courses[courseID].exams[examID].marks = marks;
+            if (marksList.length != rollList.length)
+                return false;
+            for (uint256 i = 0; i < rollList.length; i++)
+                courses[courseID].exams[examID].marks[rollList[i]] = marksList[i];
             return true;
         }
         else
             return false;
     }
 
-    function setWeightages(bytes32 courseID, mapping (bytes32 => uint256) weightage) public returns (bool added)  {
+    function setWeightages(bytes32 courseID, bytes32[] examIDList, uint256[] weightageList) public returns (bool added)  {
         if (courseIds[courseID] && instructors[msg.sender]) {
-            courses[courseID].weightage = weightage;
+            if (examIDList.length != weightageList.length)
+                return false;
+            for (uint256 i = 0; i < examIDList.length; i++)
+                courses[courseID].weightage[examIDList[i]] = weightageList[i];
             return true;
         }
         else
@@ -109,9 +119,9 @@ contract Grader {
             return false;
     }
 
-    function calculateTotal (bytes32 courseID, uint16 precision) public returns (bool added) {
+    function calculateTotal (bytes32 courseID) public returns (bool added) {
         if (courseIds[courseID] && instructors[msg.sender]) {
-            uint256 pres = 10**precision;
+            uint pres = 1000;
             for (uint256 i = 0; i < courses[courseID].examIDList.length; i++) {
                 bytes32 exam_id = courses[courseID].examIDList[i];
                 uint256 maxmarks = courses[courseID].exams[exam_id].maxMarks;
