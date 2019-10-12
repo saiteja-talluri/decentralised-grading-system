@@ -30,6 +30,7 @@ contract Grader {
         address instructor;
         bytes32[] examIDList;
         uint[] gradeCutoffs;
+        mapping (bytes32 => address) students;
         mapping (address => bool) TAs;
         mapping (bytes32 => bool) examIds;
         mapping (bytes32 => Exam) exams;
@@ -51,14 +52,17 @@ contract Grader {
         added = true;
     }
 
-    function addCourse(bytes32 courseID, string courseName, bytes32[] rollList, address[] TAs) public returns (bool added) {
+    function addCourse(bytes32 courseID, string courseName, bytes32[] rollList, address[] studAddr, address[] TAs) public returns (bool added) {
         require (instructors[msg.sender] && (!courseIds[courseID]), "addCourse");
+        require (rollList.length == studAddr.length, "addCourse");
         bytes32[] memory examIDList;
         uint[] memory gradeCutoffs;
         courseInstructor[courseID] = msg.sender;
         courseIds[courseID] = true;
         courseIDList.push(courseID);
         courses[courseID] = Course(courseID, courseName, rollList, msg.sender, examIDList, gradeCutoffs);
+        for (uint i = 0; i < rollList.length; i++)
+                courses[courseID].students[rollList[i]] = studAddr[i]
         for (uint i = 0; i < TAs.length; i++)
                 courses[courseID].TAs[TAs[i]] = true;
         added = true;
@@ -66,8 +70,7 @@ contract Grader {
 
     function addExam(bytes32 courseID, bytes32 examID, uint maxMarks, bytes32[] rollList, uint[] marksList) public returns (bool added) {
         require (courseIds[courseID] && (instructors[msg.sender] || courses[courseID].TAs[msg.sender]) && (!courses[courseID].examIds[examID]), "addExam");
-        if (marksList.length != rollList.length)
-            added = false;
+        require (marksList.length == rollList.length, "addExam")
         courses[courseID].examIds[examID] = true;
         courses[courseID].examIDList.push(examID);
         courses[courseID].exams[examID] = Exam(examID, maxMarks);
@@ -78,8 +81,7 @@ contract Grader {
 
     function updateMarks(bytes32 courseID, bytes32 examID, bytes32[] rollList, uint[] marksList) public returns (bool added) {
         require (courseIds[courseID] && (instructors[msg.sender] || courses[courseID].TAs[msg.sender]) && courses[courseID].examIds[examID], "updateMarks");
-        if (marksList.length != rollList.length)
-            added = false;
+        require (marksList.length == rollList.length, "updateMarks");
         for (uint i = 0; i < rollList.length; i++)
             courses[courseID].exams[examID].marks[rollList[i]] = marksList[i];
         added = true;
@@ -87,8 +89,7 @@ contract Grader {
 
     function setWeightages(bytes32 courseID, bytes32[] examIDList, uint[] weightageList) public returns (bool added) {
         require (courseIds[courseID] && instructors[msg.sender], "setWeightages");
-        if (examIDList.length != weightageList.length)
-            added = false;
+        require (examIDList.length == weightageList.length, "setWeightages");
         for (uint i = 0; i < examIDList.length; i++)
             courses[courseID].weightage[examIDList[i]] = weightageList[i];
         added = true;
@@ -97,8 +98,7 @@ contract Grader {
     function setGradeCutoffs(bytes32 courseID, uint[] gradeCutoffs) public returns (bool added) {
         require (courseIds[courseID] && instructors[msg.sender], "setGradeCutoffs");
         string[8] memory gradeList = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "FR"];
-        if (gradeCutoffs.length != (gradeList.length - 1))
-            added = false;
+        require (gradeCutoffs.length == (gradeList.length - 1), "setGradeCutoffs");
         courses[courseID].gradeCutoffs = gradeCutoffs;
         added = true;
     }
