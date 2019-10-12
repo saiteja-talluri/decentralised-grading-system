@@ -62,15 +62,15 @@ contract Grader {
         courseIDList.push(courseID);
         courses[courseID] = Course(courseID, courseName, rollList, msg.sender, examIDList, gradeCutoffs);
         for (uint i = 0; i < rollList.length; i++)
-                courses[courseID].students[rollList[i]] = studAddr[i]
-        for (uint i = 0; i < TAs.length; i++)
-                courses[courseID].TAs[TAs[i]] = true;
+                courses[courseID].students[rollList[i]] = studAddr[i];
+        for (uint j = 0; j < TAs.length; j++)
+                courses[courseID].TAs[TAs[j]] = true;
         added = true;
     }
 
     function addExam(bytes32 courseID, bytes32 examID, uint maxMarks, bytes32[] rollList, uint[] marksList) public returns (bool added) {
         require (courseIds[courseID] && (instructors[msg.sender] || courses[courseID].TAs[msg.sender]) && (!courses[courseID].examIds[examID]), "addExam");
-        require (marksList.length == rollList.length, "addExam")
+        require (marksList.length == rollList.length, "addExam");
         courses[courseID].examIds[examID] = true;
         courses[courseID].examIDList.push(examID);
         courses[courseID].exams[examID] = Exam(examID, maxMarks);
