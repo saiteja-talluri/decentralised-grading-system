@@ -37,39 +37,35 @@ contract Grader {
         mapping (bytes32 => Exam) exams;
         mapping (bytes32 => uint256) weightage;
         mapping (bytes32 => uint256) totalMarks;
-        mapping (bytes32 => bytes32) grades;
+        mapping (bytes32 => string) grades;
     }
 
     mapping(bytes32 => Course) public courses;
 
-    function convertToMapping(address[] arr) public return (mapping (address => bool) mapArr) {
-        mapping (address => bool) mapArr;
-        for (uint256 i = 0; i < arr.length; i++) {
-            mapArr[arr[i]] = true;
-        }
-        return mapArr;
-    }
-
-    function addInstructor(mapping(address => bool) instructorsList) public returns (bool added) {
+    function addInstructor(address[] instructorsList) public returns (bool added) {
         if (msg.sender == admin) {
-            instructors = instructorsList;
+            for (uint256 i = 0; i < instructorsList.length; i++)
+                instructors[instructorsList[i]] = true;
             return true;
         }
         else
             return false;
     }
 
-    function addCourse(bytes32 courseID, bytes32 courseName, bytes32[] rollList, mapping (address => bool) TAs) public returns (bool added) {
+    function addCourse(bytes32 courseID, bytes32 courseName, bytes32[] rollList, address[] TAs) public returns (bool added) {
         if (instructors[msg.sender] && (!courseIds[courseID])) {
-          courseInstructor[courseID] = msg.sender;
-          courseIds[courseID] = true;
-          courseIDList.push(courseID);
-          courses[courseID] = Course(courseID, courseName, rollList[], msg.sender);
-          courses[courseID].TAs = TAs;
-          return true;
+            bytes32[] memory examIDList;
+            uint256[] memory gradeCutoffs;
+            courseInstructor[courseID] = msg.sender;
+            courseIds[courseID] = true;
+            courseIDList.push(courseID);
+            courses[courseID] = Course(courseID, courseName, rollList, msg.sender, examIDList, gradeCutoffs);
+            for (uint256 i = 0; i < TAs.length; i++)
+                    courses[courseID].TAs[TAs[i]] = true;
+            return true;
         }
         else
-          return false;
+            return false;
     }
 
     function addExam(bytes32 courseID, bytes32 examID, uint256 maxMarks, mapping (bytes32 => uint256) marks) public returns (bool added) {
@@ -103,7 +99,7 @@ contract Grader {
 
     function setGradeCutoffs (bytes32 courseID, uint256[] gradeCutoffs) public returns (bool added) {
         if (courseIds[courseID] && instructors[msg.sender]) {
-            bytes32[] gradeList = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "FR"];
+            string[8] memory gradeList = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "FR"];
             if (gradeCutoffs.length != (gradeList.length - 1))
                 return false;
             courses[courseID].gradeCutoffs = gradeCutoffs;
@@ -117,7 +113,7 @@ contract Grader {
         if (courseIds[courseID] && instructors[msg.sender]) {
             uint256 pres = 10**precision;
             for (uint256 i = 0; i < courses[courseID].examIDList.length; i++) {
-                bytes32 exam_id = courses[courseID].examIDList[i]
+                bytes32 exam_id = courses[courseID].examIDList[i];
                 uint256 maxmarks = courses[courseID].exams[exam_id].maxMarks;
                 uint256 weightage = courses[courseID].weightage[exam_id];
                 for (uint256 j = 0; j < courses[courseID].rollList.length; j++) {
@@ -126,8 +122,7 @@ contract Grader {
                 }
             }
             for (uint256 k = 0; k < courses[courseID].rollList.length; k++) {
-                  bytes32 roll_no = courses[courseID].rollList[k];
-                  courses[courseID].totalMarks[roll_no] = (courses[courseID].totalMarks[roll_no]/pres);
+                  courses[courseID].totalMarks[courses[courseID].rollList[k]] = (courses[courseID].totalMarks[courses[courseID].rollList[k]]/pres);
             }
             return true;
         }
@@ -137,7 +132,7 @@ contract Grader {
 
     function calculateGrades (bytes32 courseID) public returns (bool added) {
       if (courseIds[courseID] && instructors[msg.sender]) {
-          bytes32[] gradeList = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "FR"];
+          string[8] memory gradeList = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "FR"];
           for (uint256 i = 0; i < courses[courseID].rollList.length; i++) {
               for (uint256 j = 0; j < courses[courseID].gradeCutoffs.length; j++) {
                     bytes32 roll_no = courses[courseID].rollList[i];
