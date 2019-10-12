@@ -27,7 +27,7 @@ contract Grader {
 
     struct Course {
         bytes32 courseID;
-        bytes32 courseName;
+        string courseName;
         bytes32[] rollList;
         address instructor;
         bytes32[] examIDList;
@@ -52,7 +52,7 @@ contract Grader {
             return false;
     }
 
-    function addCourse(bytes32 courseID, bytes32 courseName, bytes32[] rollList, address[] TAs) public returns (bool added) {
+    function addCourse(bytes32 courseID, string courseName, bytes32[] rollList, address[] TAs) public returns (bool added) {
         if (instructors[msg.sender] && (!courseIds[courseID])) {
             bytes32[] memory examIDList;
             uint256[] memory gradeCutoffs;
