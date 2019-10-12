@@ -2,15 +2,14 @@ pragma solidity ^0.4.26;
 
 contract Grader {
     address public admin;
-    string message;
-    bytes32[] courseIDList;
-    mapping(bytes32 => bool) public courseIds;
-    mapping(address => bool) public instructors;
-    mapping(bytes32 => address) public courseInstructor;
+    bytes32[] public courseIDList;
+    address[] public instructorsList;
+    mapping(bytes32 => bool) courseIds;
+    mapping(address => bool) instructors;
+    mapping(bytes32 => address) courseInstructor;
 
     constructor() public {
         admin = msg.sender;
-        message = 'Welcome to the Decentralised Grading System designed by Saiteja Talluri and Pavan Bhargav !!';
     }
 
     function kill() public {
@@ -40,12 +39,13 @@ contract Grader {
         mapping (bytes32 => string) grades;
     }
 
-    mapping(bytes32 => Course) public courses;
+    mapping(bytes32 => Course) courses;
 
-    function addInstructor(address[] instructorsList) public returns (bool added) {
+    function addInstructor(address[] instrlist) public returns (bool added) {
         if (msg.sender == admin) {
-            for (uint256 i = 0; i < instructorsList.length; i++)
-                instructors[instructorsList[i]] = true;
+            for (uint256 i = 0; i < instrlist.length; i++)
+                instructorsList.push(instrlist[i]);
+                instructors[instrlist[i]] = true;
             return true;
         }
         else
