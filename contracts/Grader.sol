@@ -29,22 +29,19 @@ contract Grader {
         string courseName;
         address instructor;
         bytes32[] rollList;
+        bool marksExist;
         mapping (bytes32 => bool) rollNoVer;
         mapping (address => bool) TAs;
         mapping (bytes32 => address) students;
         mapping (address => bool) studentAddrVer;
-        ma
     }
 
     struct Marks {
         bytes32[] examIDList;
         uint[] weightageList;
         uint[] maxMarksList;
-
         uint[] gradeCutoffs;
         uint[] gradeList;
-
-
         uint[] totalMarksList;
         uint[][] marksList;
         mapping (bytes32 => bool) examIds;
@@ -55,7 +52,7 @@ contract Grader {
     }
 
     mapping(bytes32 => Course) courses;
-    mapping(bytes32 => Marks) marks;
+    mapping(bytes32 => Marks) courseMarks;
 
     function addInstructor(address[] instrlist) public returns (bool added) {
         require (msg.sender == admin, "addInstructor");
@@ -71,17 +68,10 @@ contract Grader {
     function addCourse(bytes32 courseID, string courseName, bytes32[] rollList, address[] studAddr, address[] TAs) public returns (bool added) {
         require (instructors[msg.sender] && (!courseIds[courseID]), "addCourse");
         require (rollList.length == studAddr.length, "addCourse");
-        bytes32[] memory examIDList;
-        uint[] memory gradeCutoffs;
-        uint[] memory gradeList;
-        uint[] memory weightageList;
-        uint[] memory totalMarksList;
-        uint[] memory maxMarksList;
-        uint[][] memory marksList;
         courseInstructor[courseID] = msg.sender;
         courseIds[courseID] = true;
         courseIDList.push(courseID);
-        courses[courseID] = Course(courseID, courseName, msg.sender, rollList, examIDList, gradeCutoffs, gradeList, weightageList, totalMarksList, maxMarksList, marksList);
+        courses[courseID] = Course(courseID, courseName, msg.sender, rollList, false);
         for (uint i = 0; i < rollList.length; i++) {
             if (!courses[courseID].studentAddrVer[studAddr[i]]) {
                 courses[courseID].students[rollList[i]] = studAddr[i];
@@ -95,16 +85,33 @@ contract Grader {
         added = true;
     }
 
+    function addCourseMarks(bytes32 courseID) public returns (bool added) {
+        require (courseIds[courseID] && ((courseInstructor[courseID] == msg.sender) || courses[courseID].TAs[msg.sender]), "addCourseMarks");
+        bytes32[] memory examIDList;
+        uint[] memory weightageList;
+        uint[] memory maxMarksList;
+        uint[] memory gradeCutoffs;
+        uint[] memory gradeList;
+        uint[] memory totalMarksList;
+        uint[][] memory marksList;
+        courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList);
+        courses[courseID].marksExist = true;
+        added = true;
+    }
+
     function addExam(bytes32 courseID, bytes32 examID, uint maxMarks, bytes32[] rollList, uint[] marksList) public returns (bool added) {
-        require (courseIds[courseID] && ((courseInstructor[courseID] == msg.sender) || courses[courseID].TAs[msg.sender]) && (!courses[courseID].examIds[examID]), "addExam");
+        require (courseIds[courseID] && ((courseInstructor[courseID] == msg.sender) || courses[courseID].TAs[msg.sender]), "addExam");
         require (marksList.length == rollList.length, "addExam");
-        courses[courseID].examIds[examID] = true;
-        courses[courseID].examIDList.push(examID);
-        courses[courseID].maxMarksList.push(maxMarks);
-        courses[courseID].exams[examID] = Exam(examID, maxMarks);
+        if (!courses[courseID].marksExist)
+            addCourseMarks(courseID);
+        require(!courseMarks[courseID].examIds[examID], "addExam");
+        courseMarks[courseID].examIds[examID] = true;
+        courseMarks[courseID].examIDList.push(examID);
+        courseMarks[courseID].maxMarksList.push(maxMarks);
+        courseMarks[courseID].exams[examID] = Exam(examID, maxMarks);
         for (uint i = 0; i < rollList.length; i++) {
-            courses[courseID].exams[examID].marks[rollList[i]] = marksList[i];
-            courses[courseID].marksList[i].push(marksList[i]);
+            courseMarks[courseID].exams[examID].marks[rollList[i]] = marksList[i];
+            courseMarks[courseID].marksList[i].push(marksList[i]);
         }
         added = true;
     }
