@@ -44,6 +44,7 @@ contract Grader {
         uint[] gradeList;
         uint[] totalMarksList;
         uint[][] marksList;
+        uint[][] invMarksList;
         mapping (bytes32 => bool) examIds;
         mapping (bytes32 => Exam) exams;
         mapping (bytes32 => uint) weightage;
@@ -94,7 +95,8 @@ contract Grader {
         uint[] memory gradeList;
         uint[] memory totalMarksList;
         uint[][] memory marksList;
-        courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList);
+        uint[][] memory invMarksList;
+        courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList,invMarksList);
         courses[courseID].marksExist = true;
         added = true;
     }
@@ -110,8 +112,13 @@ contract Grader {
         courseMarks[courseID].maxMarksList.push(maxMarks);
         courseMarks[courseID].exams[examID] = Exam(examID, maxMarks);
         for (uint i = 0; i < rollList.length; i++) {
-            courseMarks[courseID].exams[examID].marks[rollList[i]] = marksList[i];
             courseMarks[courseID].marksList[i].push(marksList[i]);
+            courseMarks[courseID].exams[examID].marks[rollList[i]] = marksList[i];
+            for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
+              if (courseMarks[courseID].examIDList[j] == examID) {
+                  courseMarks[courseID].invMarksList[j].push(marksList[i]);
+              }
+            }
         }
         added = true;
     }
@@ -124,6 +131,7 @@ contract Grader {
             for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
                 if (courseMarks[courseID].examIDList[j] == examID) {
                     courseMarks[courseID].marksList[i][j] = marksList[i];
+                    courseMarks[courseID].invMarksList[j][i] = marksList[i];
                 }
             }
         }
@@ -183,21 +191,24 @@ contract Grader {
         added = true;
     }
 
-    function getProfExamWeightages (bytes32 courseID) public view returns (bytes32[] examslist, uint[] weightages) {
+    function getProfExamWeightages (bytes32 courseID) public view returns (bytes32[] examslist, uint[] maxMarkslist, uint[] weightages) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfExamWeightages");
         examslist = courseMarks[courseID].examIDList;
+        maxMarkslist = courseMarks[courseID].maxMarksList;
         weightages = courseMarks[courseID].weightageList;
     }
 
-    function getProfCompleteScoreSheet (bytes32 courseID) public returns (bytes32[] rolllist, bytes32[] examslist, uint[] weightages, uint[] maxMarkslist, uint[][] markslist, uint[] totalmarks, uint[] grades) {
-        require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender), "getProfGrades");
-        examslist = courses[courseID].examIDList;
+    function getProfExamMarks (bytes32 courseID, bytes32 examID) public view returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
+        require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
         rolllist = courses[courseID].rollList;
-        weightages = courses[courseID].weightageList;
-        totalmarks = courses[courseID].totalMarksList;
-        maxMarkslist = courses[courseID].maxMarksList;
-        grades = courses[courseID].gradeList;
-        markslist = courses[courseID].marksList;
+        weightage = courseMarks[courseID].weightage[examID];
+        for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
+          if (courseMarks[courseID].examIDList[i] == examID) {
+              maxmarks = courseMarks[courseID].maxMarksList[i];
+              markslist = courseMarks[courseID].invMarksList[i];
+              break;
+          }
+        }
     }
 
     function getStudentMarksGrades (bytes32 courseID, bytes32 rollNo) public view returns (bytes32[] examslist, uint[] weightages, uint[] maxMarkslist, uint[] markslist, uint totalmarks, uint grade) {
