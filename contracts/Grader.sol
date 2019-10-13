@@ -86,7 +86,7 @@ contract Grader {
         added = true;
     }
 
-    function addCourseMarks(bytes32 courseID) public returns (bool added) {
+    function addCourseMarks(bytes32 courseID) private returns (bool added) {
         require (courseIds[courseID] && ((courseInstructor[courseID] == msg.sender) || courses[courseID].TAs[msg.sender]), "addCourseMarks");
         bytes32[] memory examIDList;
         uint[] memory weightageList;
@@ -111,12 +111,15 @@ contract Grader {
         courseMarks[courseID].examIDList.push(examID);
         courseMarks[courseID].maxMarksList.push(maxMarks);
         courseMarks[courseID].exams[examID] = Exam(examID, maxMarks);
-        for (uint i = 0; i < rollList.length; i++) {
-            courseMarks[courseID].marksList[i].push(marksList[i]);
-            courseMarks[courseID].exams[examID].marks[rollList[i]] = marksList[i];
+        for (uint k = 0; i < rollList.length; k++) {
+            courseMarks[courseID].exams[examID].marks[rollList[k]] = marksList[k];
+        }
+        for (uint i = 0; i < courses[courseID].rollList.length; i++) {
+            bytes32 roll_no = courses[courseID].rollList[i];
+            courseMarks[courseID].marksList[i].push(courseMarks[courseID].exams[examID].marks[roll_no]);
             for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
               if (courseMarks[courseID].examIDList[j] == examID) {
-                  courseMarks[courseID].invMarksList[j].push(marksList[i]);
+                  courseMarks[courseID].invMarksList[j].push(courseMarks[courseID].exams[examID].marks[roll_no]);
               }
             }
         }
@@ -126,12 +129,15 @@ contract Grader {
     function updateMarks(bytes32 courseID, bytes32 examID, bytes32[] rollList, uint[] marksList) public returns (bool added) {
         require (courseIds[courseID] && ((courseInstructor[courseID] == msg.sender) || courses[courseID].TAs[msg.sender]) && courses[courseID].marksExist && courseMarks[courseID].examIds[examID], "updateMarks");
         require (marksList.length == rollList.length, "updateMarks");
-        for (uint i = 0; i < rollList.length; i++) {
-            courseMarks[courseID].exams[examID].marks[rollList[i]] = marksList[i];
+        for (uint k = 0; k < rollList.length; k++) {
+            courseMarks[courseID].exams[examID].marks[rollList[k]] = marksList[k];
+        }
+        for (uint i = 0; i < courses[courseID].rollList.length; i++) {
+            bytes32 roll_no = courses[courseID].rollList[i];
             for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
                 if (courseMarks[courseID].examIDList[j] == examID) {
-                    courseMarks[courseID].marksList[i][j] = marksList[i];
-                    courseMarks[courseID].invMarksList[j][i] = marksList[i];
+                    courseMarks[courseID].marksList[i][j] = courseMarks[courseID].exams[examID].marks[roll_no];
+                    courseMarks[courseID].invMarksList[j][i] = courseMarks[courseID].marksList[i][j];
                 }
             }
         }
