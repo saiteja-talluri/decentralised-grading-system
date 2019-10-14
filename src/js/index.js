@@ -15,7 +15,7 @@ class App extends React.Component {
          totalBet: 0,
          maxAmountOfBets: 0,
       }
-      
+
       if(typeof web3 != 'undefined'){
           log.info("Using web3 detected from external source like Metamask")
           this.web3 = new Web3(web3.currentProvider)
@@ -170,6 +170,6 @@ class App extends React.Component {
 }
 
 ReactDOM.render(
-   <App />,
+   <App/>,
    document.querySelector('#root')
 )
