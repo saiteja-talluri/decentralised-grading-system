@@ -45,6 +45,7 @@ contract Grader {
         uint[] totalMarksList;
         uint[][] marksList;
         uint[][] invMarksList;
+        bool invMarksExist;
         mapping (bytes32 => bool) examIds;
         mapping (bytes32 => Exam) exams;
         mapping (bytes32 => uint) weightage;
@@ -94,9 +95,9 @@ contract Grader {
         uint[] memory gradeCutoffs;
         uint[] memory gradeList;
         uint[] memory totalMarksList;
-        uint[][] memory marksList;
+        uint[][] memory marksList = new uint[][] (courses[courseID].rollList.length);
         uint[][] memory invMarksList;
-        courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList,invMarksList);
+        courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList,invMarksList,false);
         courses[courseID].marksExist = true;
         added = true;
     }
@@ -111,17 +112,11 @@ contract Grader {
         courseMarks[courseID].examIDList.push(examID);
         courseMarks[courseID].maxMarksList.push(maxMarks);
         courseMarks[courseID].exams[examID] = Exam(examID, maxMarks);
-        for (uint k = 0; i < rollList.length; k++) {
+        for (uint k = 0; k < rollList.length; k++) {
             courseMarks[courseID].exams[examID].marks[rollList[k]] = marksList[k];
         }
         for (uint i = 0; i < courses[courseID].rollList.length; i++) {
-            bytes32 roll_no = courses[courseID].rollList[i];
-            courseMarks[courseID].marksList[i].push(courseMarks[courseID].exams[examID].marks[roll_no]);
-            for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
-              if (courseMarks[courseID].examIDList[j] == examID) {
-                  courseMarks[courseID].invMarksList[j].push(courseMarks[courseID].exams[examID].marks[roll_no]);
-              }
-            }
+            courseMarks[courseID].marksList[i].push(courseMarks[courseID].exams[examID].marks[courses[courseID].rollList[i]]);
         }
         added = true;
     }
@@ -137,7 +132,6 @@ contract Grader {
             for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
                 if (courseMarks[courseID].examIDList[j] == examID) {
                     courseMarks[courseID].marksList[i][j] = courseMarks[courseID].exams[examID].marks[roll_no];
-                    courseMarks[courseID].invMarksList[j][i] = courseMarks[courseID].marksList[i][j];
                 }
             }
         }
@@ -204,10 +198,27 @@ contract Grader {
         weightages = courseMarks[courseID].weightageList;
     }
 
-    function getProfExamMarks (bytes32 courseID, bytes32 examID) public view returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
+    function getInverseMarks (bytes32 courseID) private returns (bool added){
+      if (!courseMarks[courseID].invMarksExist) {
+          courseMarks[courseID].invMarksList = new uint[][] (courseMarks[courseID].examIDList.length);
+          for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++)
+              for (uint i = 0; i < courses[courseID].rollList.length; i++)
+                      courseMarks[courseID].invMarksList[j].push(courseMarks[courseID].marksList[i][j]);
+          courseMarks[courseID].invMarksExist = true;
+      }
+      else {
+          for (uint q = 0; q < courseMarks[courseID].examIDList.length; q++)
+              for (uint p = 0; p < courses[courseID].rollList.length; p++)
+                      courseMarks[courseID].invMarksList[q][p] = courseMarks[courseID].marksList[p][q];
+      }
+      added = true;
+    }
+
+    function getProfExamMarks (bytes32 courseID, bytes32 examID) public returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
         rolllist = courses[courseID].rollList;
         weightage = courseMarks[courseID].weightage[examID];
+        getInverseMarks(courseID);
         for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
           if (courseMarks[courseID].examIDList[i] == examID) {
               maxmarks = courseMarks[courseID].maxMarksList[i];
