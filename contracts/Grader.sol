@@ -138,26 +138,23 @@ contract Grader {
         added = true;
     }
 
-    function setWeightages(bytes32 courseID, bytes32[] examIDList, uint[] weightageList) public returns (bool added) {
+    function setWeightages(bytes32 courseID, uint[] weightageList) private returns (bool added) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "setWeightages");
-        require (examIDList.length == weightageList.length, "setWeightages");
-        require (examIDList.length == courseMarks[courseID].examIDList.length, "setWeightages");
-        for (uint i = 0; i < examIDList.length; i++)
-            courseMarks[courseID].weightage[examIDList[i]] = weightageList[i];
-        for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++) {
-            courseMarks[courseID].weightageList.push(courseMarks[courseID].weightage[courseMarks[courseID].examIDList[j]]);
-        }
+        require (courseMarks[courseID].examIDList.length == weightageList.length, "setWeightages");
+        courseMarks[courseID].weightageList = weightageList;
+        for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++)
+            courseMarks[courseID].weightage[courseMarks[courseID].examIDList[i]] = weightageList[i];
         added = true;
     }
 
-    function setGradeCutoffs(bytes32 courseID, uint[] gradeCutoffs) public returns (bool added) {
+    function setGradeCutoffs(bytes32 courseID, uint[] gradeCutoffs) private returns (bool added) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "setGradeCutoffs");
         require (gradeCutoffs.length == (gradeChart.length - 1), "setGradeCutoffs");
         courseMarks[courseID].gradeCutoffs = gradeCutoffs;
         added = true;
     }
 
-    function calculateTotal (bytes32 courseID) public returns (bool added) {
+    function calculateTotal (bytes32 courseID) private returns (bool added) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "calculateTotal");
         uint pres = 1000;
         for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
@@ -170,15 +167,15 @@ contract Grader {
             }
         }
         for (uint k = 0; k < courses[courseID].rollList.length; k++) {
-              courseMarks[courseID].totalMarks[courses[courseID].rollList[k]] = (courseMarks[courseID].totalMarks[courses[courseID].rollList[k]]/pres);
-              courseMarks[courseID].totalMarksList[k] = courseMarks[courseID].totalMarks[courses[courseID].rollList[k]];
+              courseMarks[courseID].totalMarks[courses[courseID].rollList[k]] /= pres;
+              courseMarks[courseID].totalMarksList.push(courseMarks[courseID].totalMarks[courses[courseID].rollList[k]]);
         }
         added = true;
     }
 
-    function calculateGrades (bytes32 courseID, bytes32[] examIDList, uint[] weightageList, uint[] gradeCutoffs) public returns (bool added) {
+    function calculateGrades (bytes32 courseID, uint[] weightageList, uint[] gradeCutoffs) public returns (bool added) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "calculateGrades");
-        setWeightages(courseID, examIDList, weightageList);
+        setWeightages(courseID, weightageList);
         setGradeCutoffs(courseID, gradeCutoffs);
         calculateTotal(courseID);
         for (uint i = 0; i < courses[courseID].rollList.length; i++) {
