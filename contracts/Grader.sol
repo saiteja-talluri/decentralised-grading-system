@@ -1,10 +1,10 @@
 pragma solidity ^0.4.26;
 
 contract Grader {
-    address public admin;
-    bytes32[] public courseIDList;
+    address private admin;
+    bytes32[] private courseIDList;
     mapping(bytes32 => bool) courseIds;
-    address[] public instructorsList;
+    address[] private instructorsList;
     mapping(address => bool) instructors;
     mapping(bytes32 => address) courseInstructor;
     uint[8] gradeChart = [10, 9, 8, 7, 6, 5, 4, 0];
@@ -65,6 +65,11 @@ contract Grader {
             }
         }
         added = true;
+    }
+
+    function getInstructorsList() public view returns (address[] instrList) {
+      require (msg.sender == admin, "getInstrcutorsList");
+      instrList = instructorsList;
     }
 
     function addCourse(bytes32 courseID, string courseName, bytes32[] rollList, address[] studAddr, address[] TAs) public returns (bool added) {
