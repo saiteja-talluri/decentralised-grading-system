@@ -62,7 +62,7 @@
 
 		.sidebar {
 		  padding-top: 20px;
-		  width: 300px;
+		  width: 400px;
 		  background-color: #1D2731;
 		  position: fixed;
 		  right: 0;
@@ -105,7 +105,7 @@
 
 		.main {
 		  margin-left: 250px; /* Same as the width of the sidenav */
-		  margin-right: 300px; /* Same as the width of the sidebar */
+		  margin-right: 400px; /* Same as the width of the sidebar */
 		  font-size: 20px; /* Increased text to enable scrolling */
 		  padding: 1px 16px;
 		  padding-top: 60px;
@@ -135,9 +135,156 @@
 				<form onsubmit="App.addInstructorFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">List of addresses of Instructors</label>
-				    <input class="form-control" id="addInstructorInp0" placeholder="address[]">
+				    <input class="form-control" id="addInstructorInp0" placeholder="address1, address2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Add</button>
+				</form>
+			</div>
+
+			<div id="getInstructorsListForm" class="FunctionForm collapse">
+				<form onsubmit="App.getInstructorsListFun(); return false;">
+					<p>Get the List of Addresses of Instructors</p>
+				  <button type="submit" class="btn btn-primary">Get</button>
+				</form>
+			</div>
+
+			<div id="addCourseForm" class="FunctionForm collapse">
+				<form onsubmit="App.addCourseFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="addCourseInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course name</label>
+				    <input class="form-control" id="addCourseInp1" placeholder="blockchain">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Roll list of enrolled students</label>
+				    <input class="form-control" id="addCourseInp2" placeholder="Roll.No1, Roll.No2">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">List of addresses of Students</label>
+				    <input class="form-control" id="addCourseInp3" placeholder="address1, address2">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">List of addresses of TAs</label>
+				    <input class="form-control" id="addCourseInp4" placeholder="address1, address2">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Add</button>
+				</form>
+			</div>
+
+			<div id="addExamForm" class="FunctionForm collapse">
+				<form onsubmit="App.addExamFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="addExamInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Exam type</label>
+				    <input class="form-control" id="addExamInp1" placeholder="midsem">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Total marks</label>
+				    <input class="form-control" id="addExamInp2" placeholder="15">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Roll list of students</label>
+				    <input class="form-control" id="addExamInp3" placeholder="Roll.No1, Roll.No2">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Marks list</label>
+				    <input class="form-control" id="addExamInp4" placeholder="marks1, marks2">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Add</button>
+				</form>
+			</div>
+
+			<div id="calculateGradesForm" class="FunctionForm collapse">
+				<form onsubmit="App.calculateGradesFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="calculateGradesInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">List of Weightages</label>
+				    <input class="form-control" id="calculateGradesInp1" placeholder="10, 30, 10, 50">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Grade cut-off</label>
+				    <input class="form-control" id="calculateGradesInp2" placeholder="85, 75, 65, 55, 45, 35, 25">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Calculate</button>
+				</form>
+			</div>
+
+			<div id="updateMarksForm" class="FunctionForm collapse">
+				<form onsubmit="App.updateMarksFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="updateMarksInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Exam type</label>
+				    <input class="form-control" id="updateMarksInp1" placeholder="midsem">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Roll list of students</label>
+				    <input class="form-control" id="updateMarksInp3" placeholder="Roll.No1, Roll.No2">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Marks list</label>
+				    <input class="form-control" id="updateMarksInp4" placeholder="marks1, marks2">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Update</button>
+				</form>
+			</div>
+
+			<div id="getProfExamMarksForm" class="FunctionForm collapse">
+				<form onsubmit="App.getProfExamMarksFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="getProfExamMarksInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Exam type</label>
+				    <input class="form-control" id="getProfExamMarksInp1" placeholder="midsem">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Get</button>
+				</form>
+			</div>
+
+			<div id="getProfExamWeightagesForm" class="FunctionForm collapse">
+				<form onsubmit="App.getProfExamWeightagesFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="getProfExamWeightagesInp0" placeholder="EE 465">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Get</button>
+				</form>
+			</div>
+
+			<div id="getProfMarksGradesForm" class="FunctionForm collapse">
+				<form onsubmit="App.getProfMarksGradesFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="getProfMarksGradesInp0" placeholder="EE 465">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Get</button>
+				</form>
+			</div>
+
+			<div id="getStudentMarksGradesForm" class="FunctionForm collapse">
+				<form onsubmit="App.getStudentMarksGradesFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Course ID</label>
+				    <input class="form-control" id="getStudentMarksGradesInp0" placeholder="EE 465">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Roll Number</label>
+				    <input class="form-control" id="getStudentMarksGradesInp1" placeholder="Roll.No">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Get</button>
 				</form>
 			</div>
 		</section>
@@ -147,16 +294,37 @@
 	<div>
 		<div id="AdminRight" class="rightSidebar collapse">
 			<div class="sidebar">
-				<h2>Function Panel</h2>
+				<h2>Admin Function Panel</h2>
 			  <a href="javascript:void(0)" class="AdminFunction1">addInstructor</a>
+			  <a href="javascript:void(0)" class="AdminFunction2">getInstructorsList</a>
 			</div>
 		</div>
 
 		<div id="ProfRight" class="rightSidebar collapse">
 			<div class="sidebar">
-			  <a href="javascript:void(0)" class="ProfFunction1">ProfFunction1</a>
-			  <a href="javascript:void(0)" class="ProfFunction2">ProfFunction2</a>
-			  <a href="javascript:void(0)" class="ProfFunction3">ProfFunction3</a>
+				<h2>Prof Function Panel</h2>
+			  <a href="javascript:void(0)" class="ProfFunction1">addCourse</a>
+			  <a href="javascript:void(0)" class="ProfFunction2">addExam</a>
+			  <a href="javascript:void(0)" class="ProfFunction3">calculateGrades</a>
+			  <a href="javascript:void(0)" class="ProfFunction4">updateMarks</a>
+			  <a href="javascript:void(0)" class="ProfFunction5">getProfExamMarks</a>
+			  <a href="javascript:void(0)" class="ProfFunction6">getProfExamWeightages</a>
+			  <a href="javascript:void(0)" class="ProfFunction7">getProfMarksGrades</a>
+			</div>
+		</div>
+
+		<div id="TARight" class="rightSidebar collapse">
+			<div class="sidebar">
+				<h2>TA Function Panel</h2>
+				<a href="javascript:void(0)" class="TAFunction1">addExam</a>
+				<a href="javascript:void(0)" class="TAFunction2">updateMarks</a>
+			</div>
+		</div>
+
+		<div id="StudentRight" class="rightSidebar collapse">
+			<div class="sidebar">
+				<h2>Student Function Panel</h2>
+			  <a href="javascript:void(0)" class="StudentFunction1">getStudentMarksGrades</a>
 			</div>
 		</div>
 	</div>
@@ -178,8 +346,14 @@
 			$(".Professor").click(function(){
 				$("#ProfRight").collapse('show');
 			});
+			$(".TA").click(function(){
+				$("#TARight").collapse('show');
+			});
+			$(".Student").click(function(){
+				$("#StudentRight").collapse('show');
+			});
 
-			$(".AdminFunction1, .AdminFunction2, .AdminFunction3, .ProfFunction1, .ProfFunction2, .ProfFunction3").click(function(){
+			$(".AdminFunction1, .AdminFunction2, .ProfFunction1, .ProfFunction2, .ProfFunction3, .ProfFunction4, .ProfFunction5, .ProfFunction6, .ProfFunction7, .TAFunction1, .TAFunction2, .StudentFunction1").click(function(){
 				$(".rightSidebar").children().children().removeClass('active');
 				$(this).addClass('active');
 				$(".FunctionForm").collapse("hide");
@@ -187,6 +361,39 @@
 
 			$(".AdminFunction1").click(function(){
 			  $("#addInstructorForm").collapse('show');
+			});
+			$(".AdminFunction2").click(function(){
+			  $("#getInstructorsListForm").collapse('show');
+			});
+			$(".ProfFunction1").click(function(){
+			  $("#addCourseForm").collapse('show');
+			});
+			$(".ProfFunction2").click(function(){
+			  $("#addExamForm").collapse('show');
+			});
+			$(".ProfFunction3").click(function(){
+			  $("#calculateGradesForm").collapse('show');
+			});
+			$(".ProfFunction4").click(function(){
+			  $("#updateMarksForm").collapse('show');
+			});
+			$(".ProfFunction5").click(function(){
+			  $("#getProfExamMarksForm").collapse('show');
+			});
+			$(".ProfFunction6").click(function(){
+			  $("#getProfExamWeightagesForm").collapse('show');
+			});
+			$(".ProfFunction7").click(function(){
+			  $("#getProfMarksGradesForm").collapse('show');
+			});
+			$(".TAFunction1").click(function(){
+			  $("#addExamForm").collapse('show');
+			});
+			$(".TAFunction2").click(function(){
+			  $("#updateMarksForm").collapse('show');
+			});
+			$(".StudentFunction1").click(function(){
+			  $("#getStudentMarksGradesForm").collapse('show');
 			});
 		});
 	</script>
