@@ -94,7 +94,7 @@ App = {
     await App.grader.addInstructor(adr_ar)
   },
 
-  getInstructorsList: async () => {
+  getInstructorsListFun: async () => {
     await App.grader.getInstructorsList().then(l => {
       console.log(l)
     })
@@ -133,7 +133,7 @@ App = {
     await App.grader.calculateGrades(course_id,weightage_list,grade_cutoffs)
   },
 
-  processProfExamMarks: async (course_id,exam_id) => {
+  processProfExamMarksFun: async (course_id,exam_id) => {
     await App.grader.getProfExamMarks(course_id,exam_id).then(roll_list,marks_list,maxmarks,weightage => {
       rl = roll_list.map(i => web3.utils.hexToAscii(i))
       console.log(rl)
@@ -159,7 +159,7 @@ App = {
     })
   },
 
-  getProfMarksGrades: async () => {
+  getProfMarksGradesFun: async () => {
     var course_id = web3.utils.asciiToHex($('#getProfMarksGradesInp0').val())
     await App.grader.getProfMarksGrades(course_id).then(roll_list,totalmarks,grades => {
       rl = roll_list.map(i => web3.utils.hexToAscii(i))
@@ -169,7 +169,7 @@ App = {
     })
   },
 
-  getStudentMarksGrades: async () => {
+  getStudentMarksGradesFun: async () => {
     var course_id = web3.utils.asciiToHex($('#getStudentMarksGradesInp0').val())
     var roll_no = web3.utils.asciiToHex($('#getStudentMarksGradesInp1').val())
     await App.grader.getStudentMarksGrades(course_id, roll_no).then(el,wl,mml,ml,tm,gr => {
