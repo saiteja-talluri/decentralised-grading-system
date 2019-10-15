@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="vendor/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<!-- <link rel="stylesheet" type="text/css" href="../src/css/index.css"> -->
+	<!-- <script src="../src/js/index.js"></script> -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
+	<title>Grading System Dapp</title>
+
+
+	<style>
+		body {
+		  font-family: "Lato", sans-serif;
+		  transition: background-color .5s;
+		}
+
+		.sidenav {
+		  height: 100%;
+		  width: 250px;
+		  position: fixed;
+		  z-index: 1;
+		  top: 0;
+		  left: 0;
+		  background-color: #111;
+		  overflow: auto;
+		  padding-top: 20px;
+		}
+
+		.sidenav h2 {
+		  padding: 16px;
+		  padding-bottom: 40px;
+		  text-decoration: none;
+		  text-align: center;
+		  font-size: 30px;
+		  color: white;
+		  display: block;
+		}
+
+		.sidenav a {
+		  padding: 16px;
+		  text-decoration: none;
+		  text-align: center;
+		  font-size: 20px;
+		  color: #818181;
+		  display: block;
+		}
+		 
+		.sidenav a.active {
+			outline: none;
+		  background-color: #DC143C;
+		  font-size: 25px;
+		  color: white;
+		}
+
+		.sidenav a:hover:not(.active) {
+		  background-color: #555;
+		  color: white;
+		}
+
+		.sidebar {
+		  padding-top: 20px;
+		  width: 300px;
+		  background-color: #1D2731;
+		  position: fixed;
+		  right: 0;
+		  top: 0;
+		  z-index: 1;
+		  height: 100%;
+		  overflow: auto;
+		}
+
+		.sidebar h2 {
+		  padding: 16px;
+		  padding-bottom: 40px;
+		  text-decoration: none;
+		  text-align: center;
+		  font-size: 30px;
+		  color: white;
+		  display: block;
+		}
+
+		.sidebar a {
+		  display: block;
+		  color: #328CC1;
+		  padding: 16px;
+		  font-size: 20px;
+		  text-decoration: none;
+		  text-align: center;
+		}
+		 
+		.sidebar a.active {
+			outline: none;
+		  background-color: #D9B310;
+		  font-size: 25px;
+		  color: white;
+		}
+
+		.sidebar a:hover:not(.active) {
+		  background-color: #0B3C5D;
+		  color: white;
+		}
+
+		.main {
+		  margin-left: 250px; /* Same as the width of the sidenav */
+		  margin-right: 300px; /* Same as the width of the sidebar */
+		  font-size: 20px; /* Increased text to enable scrolling */
+		  padding: 1px 16px;
+		  padding-top: 60px;
+		}
+
+		#innersection {
+			margin: 0 auto;
+			width: 50%;
+		}
+
+	</style>
+</head>
+
+<body>
+	<div class="sidenav">
+		<h2>Grading DApp</h2>
+	  <a href="javascript:void(0)" class="Admin">Admin</a>
+	  <a href="javascript:void(0)" class="Professor">Professor</a>
+	  <a href="javascript:void(0)" class="TA">TA</a>
+	  <a href="javascript:void(0)" class="Student">Student</a>
+	</div>
+
+
+	<div id="main" class="main">
+		<section id="innersection">
+			<div id="addInstructorForm" class="FunctionForm collapse">
+				<form onsubmit="App.addInstructorFun(); return false;">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">List of addresses of Instructors</label>
+				    <input class="form-control" id="addInstructorInp0" placeholder="address[]">
+				  </div>
+				  <button type="submit" class="btn btn-primary">Add</button>
+				</form>
+			</div>
+		</section>
+	</div>
+
+
+	<div>
+		<div id="AdminRight" class="rightSidebar collapse">
+			<div class="sidebar">
+				<h2>Function Panel</h2>
+			  <a href="javascript:void(0)" class="AdminFunction1">addInstructor</a>
+			</div>
+		</div>
+
+		<div id="ProfRight" class="rightSidebar collapse">
+			<div class="sidebar">
+			  <a href="javascript:void(0)" class="ProfFunction1">ProfFunction1</a>
+			  <a href="javascript:void(0)" class="ProfFunction2">ProfFunction2</a>
+			  <a href="javascript:void(0)" class="ProfFunction3">ProfFunction3</a>
+			</div>
+		</div>
+	</div>
+
+
+	<script src="vendor/truffle-contract/dist/truffle-contract.js"></script>
+	<script src="app.js"></script>
+	<script>
+
+		$(document).ready(function(){
+			$(".Admin, .Professor, .TA, .Student").click(function(){
+				$(this).siblings('a').removeClass('active');
+				$(this).addClass('active');
+				$(".rightSidebar").collapse("hide");
+			});
+			$(".Admin").click(function(){
+				$("#AdminRight").collapse('show');
+			});
+			$(".Professor").click(function(){
+				$("#ProfRight").collapse('show');
+			});
+
+			$(".AdminFunction1, .AdminFunction2, .AdminFunction3, .ProfFunction1, .ProfFunction2, .ProfFunction3").click(function(){
+				$(".rightSidebar").children().children().removeClass('active');
+				$(this).addClass('active');
+				$(".FunctionForm").collapse("hide");
+			});
+
+			$(".AdminFunction1").click(function(){
+			  $("#addInstructorForm").collapse('show');
+			});
+		});
+	</script>
+
+</body>
+</html>

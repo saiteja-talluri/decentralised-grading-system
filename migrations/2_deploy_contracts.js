@@ -1,4 +1,4 @@
-const Migrations = artifacts.require("./Grader.sol");
+var Grader = artifacts.require("./Grader.sol");
 
 module.exports = function(deployer) {
   deployer.deploy(Grader);
