@@ -48174,10 +48174,16 @@
       "links": {},
       "address": "0x0A5CcEd03224ad77716d6621d96646310b96dE69",
       "transactionHash": "0xf1b20698ad098535eb499a12bfdc7371a81679eaee3974a926c596c521c0fe52"
+    },
+    "1571183574696": {
+      "events": {},
+      "links": {},
+      "address": "0x02eEb4ccDB05474cb2496e0bd80bB162808AF734",
+      "transactionHash": "0xfff8348929c33a9845c58b607c6011eacd24f4280a8b5c8db310185570f51301"
     }
   },
   "schemaVersion": "3.0.16",
-  "updatedAt": "2019-10-15T23:36:00.737Z",
+  "updatedAt": "2019-10-15T23:53:49.036Z",
   "devdoc": {
     "methods": {}
   },
