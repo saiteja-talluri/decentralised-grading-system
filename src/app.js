@@ -56,104 +56,122 @@ App = {
   },
 
   addInstructorFun: async () => {
-    $('.formClass').trigger('reset')
     const addresses = $('#addInstructorInp0').val()
     var adr_ar = addresses.split(",")
     await App.grader.addInstructor(adr_ar)
+    $('.formClass').trigger('reset')
   },
 
   getInstructorsListFun: async () => {
-    $('.formClass').trigger('reset')
     await App.grader.getInstructorsList().then(l => {
-      $('#getInstructorsListResult').text(l)
-      console.log(l)
+      var log = ""
+      for (index = 0; index < l.length; index++){
+        log += l[index] + "\n"
+      }
+      $('#getInstructorsListResult').text(log)
+      console.log(log)
     })
+    $('.formClass').trigger('reset')
   },
 
   addCourseFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#addCourseInp0').val())
+    var course_id = web3.fromAscii($('#addCourseInp0').val())
     var course_name = $('#addCourseInp1').val()
-    var roll_list = $('#addCourseInp2').val().split(",").map(i => web3.toHex(i))
+    var roll_list = $('#addCourseInp2').val().split(",").map(i => web3.fromAscii(i))
+    console.log(roll_list)
     var stud_addr = $('#addCourseInp3').val().split(",")
     var ta_addr = $('#addCourseInp4').val().split(",")
+    $('.formClass').trigger('reset')
     await App.grader.addCourse(course_id,course_name,roll_list,stud_addr,ta_addr)
   },
 
   addExamFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#addExamInp0').val())
-    var exam_id = web3.toHex($('#addExamInp1').val())
+    var course_id = web3.fromAscii($('#addExamInp0').val())
+    var exam_id = web3.fromAscii($('#addExamInp1').val())
     var max_marks = parseInt($('#addExamInp2').val())
-    var roll_list = $('#addExamInp3').val().split(",").map(i => web3.toHex(i))
+    var roll_list = $('#addExamInp3').val().split(",").map(i => web3.fromAscii(i))
     var marks_list = $('#addExamInp4').val().split(",").map(i => parseInt(i))
+    $('.formClass').trigger('reset')
     await App.grader.addExam(course_id,exam_id,max_marks,roll_list,marks_list)
   },
 
   updateMarksFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#updateMarksInp0').val())
-    var exam_id = web3.toHex($('#updateMarksInp1').val())
-    var roll_list = $('#updateMarksInp2').val().split(",").map(i => web3.toHex(i))
+    var course_id = web3.fromAscii($('#updateMarksInp0').val())
+    var exam_id = web3.fromAscii($('#updateMarksInp1').val())
+    var roll_list = $('#updateMarksInp2').val().split(",").map(i => web3.fromAscii(i))
     var marks_list = $('#updateMarksInp3').val().split(",").map(i => parseInt(i))
+    $('.formClass').trigger('reset')
     await App.grader.updateMarks(course_id,exam_id,roll_list,marks_list)
   },
 
   calculateGradesFun: async () => {
-    var course_id = web3.toHex($('#calculateGradesInp0').val())
+    var course_id = web3.fromAscii($('#calculateGradesInp0').val())
     var weightage_list = $('#calculateGradesInp1').val().split(",").map(i => parseInt(i))
     var grade_cutoffs = $('#calculateGradesInp2').val().split(",").map(i => parseInt(i))
+    $('.formClass').trigger('reset')
     await App.grader.calculateGrades(course_id,weightage_list,grade_cutoffs)
   },
 
   getProfExamMarksFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#getProfExamMarksInp0').val())
-    var exam_id = web3.toHex($('#getProfExamMarksInp1').val())
+    var course_id = web3.fromAscii($('#getProfExamMarksInp0').val())
+    var exam_id = web3.fromAscii($('#getProfExamMarksInp1').val())
     await App.grader.getProfExamMarks(course_id,exam_id).then(output => {
-      rl = output[0].map(i => web3.toAscii(i.toString()).toString())
-      console.log(rl.toString())
-      console.log(output[1].toString())
-      console.log(output[2].toString())
-      console.log(output[3].toString())
+      console.log(output)
+      var log = "Max Marks = " + output[2].toString() + " \nWeightage = " + output[3].toString() + "\n"
+      for (index = 0; index < output[0].length; index++) {
+        log += web3.toUtf8(output[0][index]) + " - " + output[1][index] + "\n"
+      }
+      $('#getProfExamMarksResult').text(log)
+      console.log(log)
     })
+    $('.formClass').trigger('reset')
   },
 
   getProfExamWeightagesFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#getProfExamWeightagesInp0').val())
-    await App.grader.getProfExamWeightages(course_id).then((exams,maxmarks,weightages) => {
-      exams_list = exams.map(i => web3.toAscii("$i"))
-      console.log(exams_list)
-      console.log(maxmarks)
-      console.log(weightages)
+    var course_id = web3.fromAscii($('#getProfExamWeightagesInp0').val())
+    await App.grader.getProfExamWeightages(course_id).then(output => {
+      if (output[0].length > 0)
+        exams_list = web3.toUtf8(output[0][0])
+      for (index = 1; index < output[0].length; index++) {
+        exams_list += ","
+        exams_list += web3.toUtf8(output[0][index])
+      }
+      var log = "Exams List = " + exams_list + " \nMax Marks = " + output[1].toString() + " \nWeightages = " + output[2].toString()
+      $('#getProfExamWeightagesResult').text(log)
+      console.log(log)
     })
+    $('.formClass').trigger('reset')
   },
 
   getProfMarksGradesFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#getProfMarksGradesInp0').val())
-    await App.grader.getProfMarksGrades(course_id).then((roll_list,totalmarks,grades) => {
-      rl = roll_list.map(i => web3.toAscii(i))
-      console.log(rl)
-      console.log(maxmarks)
-      console.log(weightages)
+    var course_id = web3.fromAscii($('#getProfMarksGradesInp0').val())
+    await App.grader.getProfMarksGrades(course_id).then(output => {
+      var log = ""
+      for (index = 0; index < output[0].length; index++) {
+        log += web3.toUtf8(output[0][index]) + " - " + output[1][index] + " - " + output[2][index] + "\n"
+      }
+      $('#getProfMarksGradesFormResult').text(log)
+      console.log(log)
     })
+    $('.formClass').trigger('reset')
   },
 
   getStudentMarksGradesFun: async () => {
-    $('.formClass').trigger('reset')
-    var course_id = web3.toHex($('#getStudentMarksGradesInp0').val())
-    var roll_no = web3.toHex($('#getStudentMarksGradesInp1').val())
-    await App.grader.getStudentMarksGrades(course_id, roll_no).then((el,wl,mml,ml,tm,gr) => {
-      exams_list = el.map(i => web3.toAscii(i))
-      console.log(exams_list)
-      console.log(wl)
-      console.log(mml)
-      console.log(ml)
-      console.log(tm)
-      console.log(gr)
+    var course_id = web3.fromAscii($('#getStudentMarksGradesInp0').val())
+    var roll_no = web3.fromAscii($('#getStudentMarksGradesInp1').val())
+    await App.grader.getStudentMarksGrades(course_id, roll_no).then(output => {
+      if (output[0].length > 0)
+        exams_list = web3.toUtf8(output[0][0])
+      for (index = 1; index < output[0].length; index++) {
+        exams_list += ","
+        exams_list += web3.toUtf8(output[0][index])
+      }
+      var log = "Exams List = " + exams_list + " \nMax Marks = " + output[1].toString() + " \nWeightages = " + output[2].toString() + "\n"
+      log += "Marks = " + output[3].toString() + "\nTotal Marks = " + output[4].toString() + "\nGrade = " + output[5].toString()
+      $('#getStudentMarksGradesResult').text(log)
+      console.log(log)
     })
+    $('.formClass').trigger('reset')
   }
 }
 

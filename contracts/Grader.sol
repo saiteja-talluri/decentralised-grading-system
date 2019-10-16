@@ -98,8 +98,8 @@ contract Grader {
         uint[] memory weightageList;
         uint[] memory maxMarksList;
         uint[] memory gradeCutoffs;
-        uint[] memory gradeList;
-        uint[] memory totalMarksList;
+        uint[] memory gradeList = new uint[] (courses[courseID].rollList.length);
+        uint[] memory totalMarksList = new uint[] (courses[courseID].rollList.length);
         uint[][] memory marksList = new uint[][] (courses[courseID].rollList.length);
         uint[][] memory invMarksList;
         courseMarks[courseID] = Marks(examIDList, weightageList,maxMarksList,gradeCutoffs,gradeList,totalMarksList,marksList,invMarksList,false);
@@ -162,6 +162,9 @@ contract Grader {
     function calculateTotal (bytes32 courseID) private returns (bool added) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "calculateTotal");
         uint pres = 1000;
+        for (uint p = 0; p < courses[courseID].rollList.length; p++){
+            courseMarks[courseID].totalMarks[courses[courseID].rollList[p]] = 0;
+        }
         for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
             bytes32 exam_id = courseMarks[courseID].examIDList[i];
             uint maxmarks = courseMarks[courseID].exams[exam_id].maxMarks;
@@ -173,7 +176,7 @@ contract Grader {
         }
         for (uint k = 0; k < courses[courseID].rollList.length; k++) {
               courseMarks[courseID].totalMarks[courses[courseID].rollList[k]] /= pres;
-              courseMarks[courseID].totalMarksList.push(courseMarks[courseID].totalMarks[courses[courseID].rollList[k]]);
+              courseMarks[courseID].totalMarksList[k] = courseMarks[courseID].totalMarks[courses[courseID].rollList[k]];
         }
         added = true;
     }
@@ -187,12 +190,13 @@ contract Grader {
             for (uint j = 0; j < courseMarks[courseID].gradeCutoffs.length; j++) {
                 bytes32 roll_no = courses[courseID].rollList[i];
                 if (courseMarks[courseID].totalMarks[roll_no] >= courseMarks[courseID].gradeCutoffs[j]) {
-                    courseMarks[courseID].gradeList.push(gradeChart[j]);
+                    courseMarks[courseID].gradeList[i] = gradeChart[j];
                     courseMarks[courseID].grades[roll_no] = gradeChart[j];
                     break;
                 }
             }
         }
+        getInverseMarks(courseID);
         added = true;
     }
 
@@ -204,7 +208,7 @@ contract Grader {
     }
 
     function getInverseMarks (bytes32 courseID) private returns (bool added){
-        require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
+        require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getInverseMarks");
         if (!courseMarks[courseID].invMarksExist) {
           courseMarks[courseID].invMarksList = new uint[][] (courseMarks[courseID].examIDList.length);
           for (uint j = 0; j < courseMarks[courseID].examIDList.length; j++)
@@ -220,11 +224,10 @@ contract Grader {
         added = true;
     }
 
-    function getProfExamMarks (bytes32 courseID, bytes32 examID) public returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
+    function getProfExamMarks (bytes32 courseID, bytes32 examID) public view returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
         rolllist = courses[courseID].rollList;
         weightage = courseMarks[courseID].weightage[examID];
-        getInverseMarks(courseID);
         for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
           if (courseMarks[courseID].examIDList[i] == examID) {
               maxmarks = courseMarks[courseID].maxMarksList[i];

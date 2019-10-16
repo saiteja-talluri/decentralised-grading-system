@@ -142,10 +142,6 @@
 						<input class="form-control" id="addInstructorInp0" placeholder="address1, address2">
 					</div>
 					<button type="submit" class="btn btn-primary">Add</button>
-					<div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-						<textarea class="resultText form-control" id="addInstructorResult" rows="5" disabled="disabled"></textarea>
-					</div>
 				</form>
 			</div>
 
@@ -161,7 +157,7 @@
 			</div>
 
 			<div id="addCourseForm" class="FunctionForm collapse">
-				<form onsubmit="App.addCourseFun(); return false;">
+				<form class="formClass" onsubmit="App.addCourseFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="addCourseInp0" placeholder="EE 465">
@@ -183,15 +179,11 @@
 				    <input class="form-control" id="addCourseInp4" placeholder="address1, address2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Add</button>
-				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
-				  </div>
 				</form>
 			</div>
 
 			<div id="addExamForm" class="FunctionForm collapse">
-				<form onsubmit="App.addExamFun(); return false;">
+				<form class="formClass" onsubmit="App.addExamFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="addExamInp0" placeholder="EE 465">
@@ -213,15 +205,11 @@
 				    <input class="form-control" id="addExamInp4" placeholder="marks1, marks2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Add</button>
-				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
-				  </div>
 				</form>
 			</div>
 
 			<div id="calculateGradesForm" class="FunctionForm collapse">
-				<form onsubmit="App.calculateGradesFun(); return false;">
+				<form class="formClass" onsubmit="App.calculateGradesFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="calculateGradesInp0" placeholder="EE 465">
@@ -235,15 +223,11 @@
 				    <input class="form-control" id="calculateGradesInp2" placeholder="85, 75, 65, 55, 45, 35, 25">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Calculate</button>
-				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
-				  </div>
 				</form>
 			</div>
 
 			<div id="updateMarksForm" class="FunctionForm collapse">
-				<form onsubmit="App.updateMarksFun(); return false;">
+				<form class="formClass" onsubmit="App.updateMarksFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="updateMarksInp0" placeholder="EE 465">
@@ -261,15 +245,11 @@
 				    <input class="form-control" id="updateMarksInp3" placeholder="marks1, marks2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Update</button>
-				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
-				  </div>
 				</form>
 			</div>
 
 			<div id="getProfExamMarksForm" class="FunctionForm collapse">
-				<form onsubmit="App.getProfExamMarksFun(); return false;">
+				<form class="formClass" onsubmit="App.getProfExamMarksFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="getProfExamMarksInp0" placeholder="EE 465">
@@ -280,42 +260,42 @@
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
 				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+						<label for="exampleFormControlTextarea1">Score Sheet for the exam</label>
+				  	<textarea class="resultText form-control" id="getProfExamMarksResult" rows="5" disabled="disabled"></textarea>
 				  </div>
 				</form>
 			</div>
 
 			<div id="getProfExamWeightagesForm" class="FunctionForm collapse">
-				<form onsubmit="App.getProfExamWeightagesFun(); return false;">
+				<form class="formClass" onsubmit="App.getProfExamWeightagesFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="getProfExamWeightagesInp0" placeholder="EE 465">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
 				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+						<label for="exampleFormControlTextarea1">Exam Details</label>
+				  	<textarea class="resultText form-control" id="getProfExamWeightagesResult" rows="5" disabled="disabled"></textarea>
 				  </div>
 				</form>
 			</div>
 
 			<div id="getProfMarksGradesForm" class="FunctionForm collapse">
-				<form onsubmit="App.getProfMarksGradesFun(); return false;">
+				<form class="formClass" onsubmit="App.getProfMarksGradesFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="getProfMarksGradesInp0" placeholder="EE 465">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
 				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+						<label for="exampleFormControlTextarea1">Student Grades Sheet</label>
+				  	<textarea class="resultText form-control" id="getProfMarksGradesFormResult" rows="5" disabled="disabled"></textarea>
 				  </div>
 				</form>
 			</div>
 
 			<div id="getStudentMarksGradesForm" class="FunctionForm collapse">
-				<form onsubmit="App.getStudentMarksGradesFun(); return false;">
+				<form class="formClass" onsubmit="App.getStudentMarksGradesFun(); return false;">
 				  <div class="form-group">
 				    <label for="exampleInputEmail1">Course ID</label>
 				    <input class="form-control" id="getStudentMarksGradesInp0" placeholder="EE 465">
@@ -326,8 +306,8 @@
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
 				  <div class="resultDiv form-group">
-						<label for="exampleFormControlTextarea1">Instructors List</label>
-				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+						<label for="exampleFormControlTextarea1">Students Report</label>
+				  	<textarea class="resultText form-control" id="getStudentMarksGradesResult" rows="5" disabled="disabled"></textarea>
 				  </div>
 				</form>
 			</div>
