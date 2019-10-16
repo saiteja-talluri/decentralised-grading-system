@@ -68,58 +68,54 @@ App = {
   },
 
   addCourseFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#addCourseInp0').val())
+    var course_id = web3.toHex($('#addCourseInp0').val())
     var course_name = $('#addCourseInp1').val()
-    var roll_list = $('#addCourseInp2').val().split(",").map(i => web3.utils.asciiToHex(i))
+    var roll_list = $('#addCourseInp2').val().split(",").map(i => web3.toHex(i))
     var stud_addr = $('#addCourseInp3').val().split(",")
     var ta_addr = $('#addCourseInp4').val().split(",")
     await App.grader.addCourse(course_id,course_name,roll_list,stud_addr,ta_addr)
   },
 
   addExamFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#addExamInp0').val())
-    var exam_id = web3.utils.asciiToHex($('#addExamInp1').val())
+    var course_id = web3.toHex($('#addExamInp0').val())
+    var exam_id = web3.toHex($('#addExamInp1').val())
     var max_marks = parseInt($('#addExamInp2').val())
-    var roll_list = $('#addExamInp3').val().split(",").map(i => web3.utils.asciiToHex(i))
+    var roll_list = $('#addExamInp3').val().split(",").map(i => web3.toHex(i))
     var marks_list = $('#addExamInp4').val().split(",").map(i => parseInt(i))
     await App.grader.addExam(course_id,exam_id,max_marks,roll_list,marks_list)
   },
 
   updateMarksFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#updateMarksInp0').val())
-    var exam_id = web3.utils.asciiToHex($('#updateMarksInp1').val())
-    var roll_list = $('#updateMarks2').val().split(",").map(i => web3.utils.asciiToHex(i))
-    var marks_list = $('#updateMarks3').val().split(",").map(i => parseInt(i))
+    var course_id = web3.toHex($('#updateMarksInp0').val())
+    var exam_id = web3.toHex($('#updateMarksInp1').val())
+    var roll_list = $('#updateMarksInp2').val().split(",").map(i => web3.toHex(i))
+    var marks_list = $('#updateMarksInp3').val().split(",").map(i => parseInt(i))
     await App.grader.updateMarks(course_id,exam_id,roll_list,marks_list)
   },
 
   calculateGradesFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#calculateGradesInp0').val())
+    var course_id = web3.toHex($('#calculateGradesInp0').val())
     var weightage_list = $('#calculateGradesInp1').val().split(",").map(i => parseInt(i))
     var grade_cutoffs = $('#calculateGradesInp2').val().split(",").map(i => parseInt(i))
     await App.grader.calculateGrades(course_id,weightage_list,grade_cutoffs)
   },
 
-  processProfExamMarksFun: async (course_id,exam_id) => {
-    await App.grader.getProfExamMarks(course_id,exam_id).then(roll_list,marks_list,maxmarks,weightage => {
-      rl = roll_list.map(i => web3.utils.hexToAscii(i))
-      console.log(rl)
-      console.log(marks_list)
-      console.log(maxmarks)
-      console.log(weightage)
+  getProfExamMarksFun: async () => {
+    var course_id = web3.toHex($('#getProfExamMarksInp0').val())
+    var exam_id = web3.toHex($('#getProfExamMarksInp1').val())
+    await App.grader.getProfExamMarks(course_id,exam_id).then(output => {
+      rl = output[0].map(i => web3.toAscii(i.toString()).toString())
+      console.log(rl.toString())
+      console.log(output[1].toString())
+      console.log(output[2].toString())
+      console.log(output[3].toString())
     })
   },
 
-  getProfExamMarksFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#getProfExamMarksInp0').val())
-    var exam_id = web3.utils.asciiToHex($('#getProfExamMarksInp1').val())
-    await App.grader.getInverseMarks(course_id).then(processProfExamMarks(course_id,exam_id))
-  },
-
   getProfExamWeightagesFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#getProfExamWeightagesInp0').val())
-    await App.grader.getProfExamWeightages(course_id).then(exams,maxmarks,weightages => {
-      exams_list = exams.map(i => web3.utils.hexToAscii(i))
+    var course_id = web3.toHex($('#getProfExamWeightagesInp0').val())
+    await App.grader.getProfExamWeightages(course_id).then((exams,maxmarks,weightages) => {
+      exams_list = exams.map(i => web3.toAscii("$i"))
       console.log(exams_list)
       console.log(maxmarks)
       console.log(weightages)
@@ -127,9 +123,9 @@ App = {
   },
 
   getProfMarksGradesFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#getProfMarksGradesInp0').val())
-    await App.grader.getProfMarksGrades(course_id).then(roll_list,totalmarks,grades => {
-      rl = roll_list.map(i => web3.utils.hexToAscii(i))
+    var course_id = web3.toHex($('#getProfMarksGradesInp0').val())
+    await App.grader.getProfMarksGrades(course_id).then((roll_list,totalmarks,grades) => {
+      rl = roll_list.map(i => web3.toAscii(i))
       console.log(rl)
       console.log(maxmarks)
       console.log(weightages)
@@ -137,10 +133,10 @@ App = {
   },
 
   getStudentMarksGradesFun: async () => {
-    var course_id = web3.utils.asciiToHex($('#getStudentMarksGradesInp0').val())
-    var roll_no = web3.utils.asciiToHex($('#getStudentMarksGradesInp1').val())
-    await App.grader.getStudentMarksGrades(course_id, roll_no).then(el,wl,mml,ml,tm,gr => {
-      exams_list = el.map(i => web3.utils.hexToAscii(i))
+    var course_id = web3.toHex($('#getStudentMarksGradesInp0').val())
+    var roll_no = web3.toHex($('#getStudentMarksGradesInp1').val())
+    await App.grader.getStudentMarksGrades(course_id, roll_no).then((el,wl,mml,ml,tm,gr) => {
+      exams_list = el.map(i => web3.toAscii(i))
       console.log(exams_list)
       console.log(wl)
       console.log(mml)

@@ -203,7 +203,7 @@ contract Grader {
         weightages = courseMarks[courseID].weightageList;
     }
 
-    function getInverseMarks (bytes32 courseID) public returns (bool added){
+    function getInverseMarks (bytes32 courseID) private returns (bool added){
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
         if (!courseMarks[courseID].invMarksExist) {
           courseMarks[courseID].invMarksList = new uint[][] (courseMarks[courseID].examIDList.length);
@@ -220,10 +220,11 @@ contract Grader {
         added = true;
     }
 
-    function getProfExamMarks (bytes32 courseID, bytes32 examID) public view returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
+    function getProfExamMarks (bytes32 courseID, bytes32 examID) public returns (bytes32[] rolllist, uint[] markslist, uint maxmarks, uint weightage) {
         require (courseIds[courseID] && (courseInstructor[courseID] == msg.sender) && courses[courseID].marksExist, "getProfGrades");
         rolllist = courses[courseID].rollList;
         weightage = courseMarks[courseID].weightage[examID];
+        getInverseMarks(courseID);
         for (uint i = 0; i < courseMarks[courseID].examIDList.length; i++) {
           if (courseMarks[courseID].examIDList[i] == examID) {
               maxmarks = courseMarks[courseID].maxMarksList[i];
