@@ -116,35 +116,47 @@
 			width: 50%;
 		}
 
+		.FunctionForm .resultDiv {
+			padding-top: 100px;
+		}
+
 	</style>
 </head>
 
 <body>
 	<div class="sidenav">
 		<h2>Grading DApp</h2>
-	  <a href="javascript:void(0)" class="Admin">Admin</a>
-	  <a href="javascript:void(0)" class="Professor">Professor</a>
-	  <a href="javascript:void(0)" class="TA">TA</a>
-	  <a href="javascript:void(0)" class="Student">Student</a>
+		<a href="javascript:void(0)" class="Admin">Admin</a>
+		<a href="javascript:void(0)" class="Professor">Professor</a>
+		<a href="javascript:void(0)" class="TA">TA</a>
+		<a href="javascript:void(0)" class="Student">Student</a>
 	</div>
 
 
 	<div id="main" class="main">
 		<section id="innersection">
 			<div id="addInstructorForm" class="FunctionForm collapse">
-				<form onsubmit="App.addInstructorFun(); return false;">
-				  <div class="form-group">
-				    <label for="exampleInputEmail1">List of addresses of Instructors</label>
-				    <input class="form-control" id="addInstructorInp0" placeholder="address1, address2">
-				  </div>
-				  <button type="submit" class="btn btn-primary">Add</button>
+				<form class="formClass" onsubmit="App.addInstructorFun(); return false;">
+					<div class="form-group">
+						<label for="exampleInputEmail1">List of addresses of Instructors</label>
+						<input class="form-control" id="addInstructorInp0" placeholder="address1, address2">
+					</div>
+					<button type="submit" class="btn btn-primary">Add</button>
+					<div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+						<textarea class="resultText form-control" id="addInstructorResult" rows="5" disabled="disabled"></textarea>
+					</div>
 				</form>
 			</div>
 
 			<div id="getInstructorsListForm" class="FunctionForm collapse">
-				<form onsubmit="App.getInstructorsListFun(); return false;">
+				<form class="formClass" onsubmit="App.getInstructorsListFun(); return false;">
 					<p>Get the List of Addresses of Instructors</p>
-				  <button type="submit" class="btn btn-primary">Get</button>
+					<button type="submit" class="btn btn-primary">Get</button>
+					<div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+						<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+					</div>
 				</form>
 			</div>
 
@@ -171,6 +183,10 @@
 				    <input class="form-control" id="addCourseInp4" placeholder="address1, address2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Add</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -197,6 +213,10 @@
 				    <input class="form-control" id="addExamInp4" placeholder="marks1, marks2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Add</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -215,6 +235,10 @@
 				    <input class="form-control" id="calculateGradesInp2" placeholder="85, 75, 65, 55, 45, 35, 25">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Calculate</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -237,6 +261,10 @@
 				    <input class="form-control" id="updateMarksInp3" placeholder="marks1, marks2">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Update</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -251,6 +279,10 @@
 				    <input class="form-control" id="getProfExamMarksInp1" placeholder="midsem">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -261,6 +293,10 @@
 				    <input class="form-control" id="getProfExamWeightagesInp0" placeholder="EE 465">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -271,6 +307,10 @@
 				    <input class="form-control" id="getProfMarksGradesInp0" placeholder="EE 465">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 
@@ -285,6 +325,10 @@
 				    <input class="form-control" id="getStudentMarksGradesInp1" placeholder="Roll.No">
 				  </div>
 				  <button type="submit" class="btn btn-primary">Get</button>
+				  <div class="resultDiv form-group">
+						<label for="exampleFormControlTextarea1">Instructors List</label>
+				  	<textarea class="resultText form-control" id="getInstructorsListResult" rows="5" disabled="disabled"></textarea>
+				  </div>
 				</form>
 			</div>
 		</section>
@@ -357,6 +401,7 @@
 				$(".rightSidebar").children().children().removeClass('active');
 				$(this).addClass('active');
 				$(".FunctionForm").collapse("hide");
+				$('.resultText').text('');
 			});
 
 			$(".AdminFunction1").click(function(){
